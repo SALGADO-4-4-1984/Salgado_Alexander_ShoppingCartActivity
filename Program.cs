@@ -15,7 +15,7 @@ class Product
 
     public double GetItemtotal(int quantity)
     {
-        return Price * quantity;
+        return Price * quantity;   // <------------- Per quantity multiplies the price of the product the user chose
     }
 
     public bool HasEnoughStock(int quantity)
@@ -66,7 +66,7 @@ class Program
         string inputQty = Console.ReadLine();
 
         int quantity;
-        bool isValidQty = int.TryParse(inputQty, out quantity);
+        bool isValidQty = int.TryParse(inputQty, out quantity); 
 
         
 
@@ -89,8 +89,40 @@ class Program
         else
         {
             Console.WriteLine($"You selected Product ID: {productId}, Quantity: {quantity}");
-        } 
+        }
 
+        //---------------------------------------------------------------------SECTION 4: ( PRODUCT SELECTION )-------------------------------------------------------------//
+        Product selectedProduct = null;
+
+        for (int i = 0; i < store.Length; ++i)
+        { 
+            if (store[i].Id == productId)
+            {
+                selectedProduct = store[i];
+                break;
+            }
+        
+        }
+
+        //------------------------------------------------------------SECTION 5: ( STOCK CHECK and PROCESSING  )-------------------------------------------------------------//
+
+        if (selectedProduct == null)
+        {
+            Console.WriteLine("Product not Found.");
+        }
+
+        else if (!selectedProduct.HasEnoughStock(quantity))
+        {
+            Console.WriteLine("Not enough stock Available");
+        }
+            
+        else
+        {
+            double total = selectedProduct.GetItemtotal(quantity);
+            selectedProduct.DeductStock(quantity);
+
+            Console.WriteLine($"Added to cart! total: {total}");
+        }
 
         //----------------------------------------------------------------------------------DEAD END-----------------------------------------------------------------------------//
 
