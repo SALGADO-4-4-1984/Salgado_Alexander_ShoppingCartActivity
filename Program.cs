@@ -49,7 +49,7 @@ class Program
         store[1] = new Product { Id = 2, Name = "Mouse", Price = 2000, RemainingStock = 10 };
         store[2] = new Product { Id = 3, Name = "Keyboard", Price = 4000, RemainingStock = 10 };
 
-        Console.WriteLine("============== STORE MENU =============");
+        Console.WriteLine("======================= STORE MENU =======================");
         for (int i = 0; i < store.Length; i++)
         {
             store[i].DisplayProduct();
@@ -66,9 +66,9 @@ class Program
         string inputQty = Console.ReadLine();
 
         int quantity;
-        bool isValidQty = int.TryParse(inputQty, out quantity); 
+        bool isValidQty = int.TryParse(inputQty, out quantity);
 
-        
+
 
         if (!isValidId) // <------------- Checks if ID is Valid Number according to USER's Input
         {
@@ -78,7 +78,7 @@ class Program
         {
             Console.WriteLine("Product ID must not be greater than 0.");
         }
-        if (!isValidQty) // <------------- Checks if ID is Valid Number according to USER's Input
+        if (!isValidQty) // <------------- Checks if Quantity is Valid Number according to USER's Input
         {
             Console.WriteLine("Invalid Quantity. Please enter a Number.");
         }
@@ -95,13 +95,13 @@ class Program
         Product selectedProduct = null;
 
         for (int i = 0; i < store.Length; ++i)
-        { 
+        {
             if (store[i].Id == productId)
             {
                 selectedProduct = store[i];
                 break;
             }
-        
+
         }
 
         //------------------------------------------------------------SECTION 5: ( STOCK CHECK and PROCESSING  )-------------------------------------------------------------//
@@ -115,13 +115,89 @@ class Program
         {
             Console.WriteLine("Not enough stock Available");
         }
-            
+
         else
         {
             double total = selectedProduct.GetItemtotal(quantity);
             selectedProduct.DeductStock(quantity);
 
             Console.WriteLine($"Added to cart! total: {total}");
+        }
+
+        //----------------------------------------------------------SECTION 6: ( CART DECLARATION and ADD TO CART )------------------------------------------------------------//
+        Product[] cart = new Product[10];
+        int[] cartQty = new int[10];
+        int cartCount = 0;
+
+        int existingIndex = -1;
+
+        for (int i = 0; i < cartCount; ++i)
+        {
+            if(cart[i].Id == selectedProduct.Id)
+            {
+                existingIndex = i;
+                break;
+            }
+        }
+
+        if (existingIndex != -1)
+        {
+            cartQty[existingIndex] += quantity;
+        }
+        else
+        {
+            cart[cartCount] = selectedProduct;
+            cartQty[cartCount] = quantity;
+            cartCount++;
+        }
+        
+        Console.WriteLine("Product Added to Cart.");
+
+        //----------------------------------------------------------SECTION 7: ( RECEIPT DISPLAY )------------------------------------------------------------//
+        Console.WriteLine("======================= RECEIPT =======================");
+        for (int i = 0; i < cartCount; ++i)
+        {
+            double itemTotal = cart[i].GetItemtotal(cartQty[i]);
+
+            Console.WriteLine($"Product: {cart[i].Name}, Qty: {cartQty[i]}, Price: {cart[i].Price}, Total: {itemTotal}");
+        }
+
+        //----------------------------------------------------------SECTION 8: ( TOTAL COMPUTATION )------------------------------------------------------------//
+        double finalTotal = 0;
+
+        for(int i = 0; i < cartCount; i++)
+        {
+            double itemTotal = cart[i].GetItemtotal(cartQty[i]);
+            finalTotal += itemTotal;
+        }
+
+        Console.WriteLine($"Total Amount: {finalTotal}");
+
+        //----------------------------------------------------------SECTION 9: ( DISCOUNT SYSTEM )------------------------------------------------------------//
+        double discount = 0;
+        double finalAmount = finalTotal;
+
+        if (finalTotal >= 5000)
+        {
+            discount = finalTotal * 0.10;
+            finalAmount = finalTotal - discount;
+
+            Console.WriteLine("Discount Applied: 10%");
+        }
+
+        Console.WriteLine($"Final Amount to Pay: {finalAmount}");
+
+        //----------------------------------------------------------SECTION 10: ( LOOP [ WORK IN PROGRESS ] )------------------------------------------------------------//
+        Console.WriteLine("Do you want to buy again? (y/n): ");
+        string choice = Console.ReadLine();
+
+        if (choice == "Y" || choice == "y")
+        {
+            Console.WriteLine("Restarting...");
+        }
+        else if (choice == "N" || choice == "n")
+        {
+            Console.WriteLine("Thank you for Shopping!"); 
         }
 
         //----------------------------------------------------------------------------------DEAD END-----------------------------------------------------------------------------//
