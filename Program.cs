@@ -15,35 +15,40 @@ class Product
 
     public double GetItemtotal(int quantity)
     {
-        return Price * quantity;   // <------------- Per quantity multiplies the price of the product the user chose
+        return Price * quantity;
     }
 
     public bool HasEnoughStock(int quantity)
     {
         if (RemainingStock >= quantity)
         {
-            return true; // <------------- When stock is available
+            return true;
         }
         else
         {
-            return false; // <------------- Not Enough Stock
+            return false;
         }
     }
 
 
-    public void DeductStock(int quantity) // <------------- Reduce stock or -1 stock per purchase of product
+    public void DeductStock(int quantity)
     {
         RemainingStock -= quantity;
     }
 
 }
-// =================================================================================== SECTION 2: ( STORE MENU [ !! UPDATED SECTION !! ] ) =================================================================================== //
+// =================================================================================== SECTION 2: ( STORE MENU  [ !! UPDATED SECTION !! ] ) =================================================================================== //
 class Program
 {
 
-    static void Main(string[] args) 
+    static void Main(string[] args)
     {
-        string choice = "y";      //<.................................. [ RECENTLY ADDED for LOOPS ]
+        string choice = "y";
+        Product[] cart = new Product[10];      //
+        int[] cartQty = new int[10];          //<.............................  [ Was prevously on section 6  but moved to section 2 to fic the cart system ]
+        int cartCount = 0;                   //
+        int totalItems = 0;  //<..............................[ Recently added for CART SYSTEM ]
+
         Product[] store = new Product[3];
 
         store[0] = new Product { Id = 1, Name = "Laptop", Price = 60000, RemainingStock = 10 };
@@ -55,43 +60,41 @@ class Program
         {
             store[i].DisplayProduct();
         }
-        while (choice == "y" || choice == "Y")    //<.................................. [ RECENTLY ADDED for LOOPS ]
+        while (choice == "y" || choice == "Y")
         {
-            // =================================================================================== SECTION 3: ( USER INPUT ) =================================================================================== //
+            // =================================================================================== SECTION 3: ( USER INPUT [ !! UPDATED SECTION !! ] ) =================================================================================== //
 
-            Console.WriteLine("Enter Product ID: ");     // <------------- where USER interacts by input product ID
-            string inputId = Console.ReadLine();
+            int productId = 0;
+            bool isValidId = false;
 
-            int productId;
-            bool isValidId = int.TryParse(inputId, out productId);
-
-            Console.WriteLine("Enter Quantity: ");        // <------------- where USER interacts by input Quantity
-            string inputQty = Console.ReadLine();
-
-            int quantity;
-            bool isValidQty = int.TryParse(inputQty, out quantity);
-
-
-
-            if (!isValidId)               // <------------- Checks if ID is Valid Number according to USER's Input
+            while (!isValidId || productId <= 0)
             {
-                Console.WriteLine("Invalid Product ID. Please enter a Number.");
+                Console.WriteLine("Enter Product ID: ");
+                string inputId = Console.ReadLine();
+
+                isValidId = int.TryParse(inputId, out productId);
+
+                if (!isValidId || productId <= 0)
+                {
+                    Console.WriteLine("Invalid Product ID Try Again");
+                }
             }
-            else if (productId <= 0)
+
+
+            int quantity = 0;
+            bool isValidQty = false;
+
+            while (!isValidQty || quantity <= 0)
             {
-                Console.WriteLine("Product ID must not be greater than 0.");
-            }
-            if (!isValidQty)              // <------------- Checks if Quantity is Valid Number according to USER's Input
-            {
-                Console.WriteLine("Invalid Quantity. Please enter a Number.");
-            }
-            else if (quantity <= 0)
-            {
-                Console.WriteLine("Quantity must not be greater than 0.");
-            }
-            else
-            {
-                Console.WriteLine($"You selected Product ID: {productId}, Quantity: {quantity}");
+                Console.WriteLine("Enter Quantity: ");
+                string inputQty = Console.ReadLine();
+
+                isValidQty = int.TryParse(inputQty, out quantity);
+
+                if (!isValidQty || quantity <= 0)
+                {
+                    Console.WriteLine("Invalid Quantity Try Again");
+                }
             }
 
             // =================================================================================== SECTION 4: ( PRODUCT SELECTION ) =================================================================================== //
@@ -107,8 +110,8 @@ class Program
 
             }
 
-            // =================================================================================== SECTION 5: ( STOCK CHECK and PROCESSING  ) =================================================================================== //
-
+            // =================================================================================== SECTION 5: ( STOCK CHECK and PROCESSING [ !! UPDATED SECTION !! ]  ) =================================================================================== //
+            bool isTransactionValid = false;  //<........................ [ RECENTLY ADDED for CART SYSTEM UPDATE ]
             if (selectedProduct == null)
             {
                 Console.WriteLine("Product not Found.");
@@ -124,37 +127,48 @@ class Program
                 double total = selectedProduct.GetItemtotal(quantity);
                 selectedProduct.DeductStock(quantity);
 
+                isTransactionValid = true;     //<........................ [ RECENTLY ADDED for CART SYSTEM UPDATE ]
+
                 Console.WriteLine($"Added to cart! total: {total}");
             }
 
-            // =================================================================================== SECTION 6: ( CART DECLARATION and ADD TO CART ) =================================================================================== //
-            Product[] cart = new Product[10];
-            int[] cartQty = new int[10];
-            int cartCount = 0;
-
-            int existingIndex = -1;
-
-            for (int i = 0; i < cartCount; ++i)
+            // =================================================================================== SECTION 6: ( CART DECLARATION and ADD TO CART [ !! UPDATED SECTION !! ] ) =================================================================================== //
+             
+            if (isTransactionValid && selectedProduct != null)
             {
-                if (cart[i].Id == selectedProduct.Id)
+                if (totalItems + quantity > 10)
                 {
-                    existingIndex = i;
-                    break;
+                    Console.WriteLine("");
+                    Console.WriteLine("Cart is Full. Cannot ADD more items");
+                    Console.WriteLine("");
+                }
+                else
+                {
+                    int exisitingIndex = -1;
+
+                    for (int i = 0; i < cartCount; i++)
+                    {
+                        if (cart[i].Id == selectedProduct.Id)
+                        {
+                            exisitingIndex = i;
+                            break;
+                        }
+                    }
+                    if (exisitingIndex != -1)
+                    {
+                        cartQty[exisitingIndex] += quantity;
+                    }
+                    else
+                    {
+                        cart[cartCount] = selectedProduct;
+                        cartQty[cartCount] = quantity;
+                        cartCount++;
+                    }
+                    totalItems += quantity;
+
+                    Console.WriteLine("Product Added to Cart");
                 }
             }
-
-            if (existingIndex != -1)
-            {
-                cartQty[existingIndex] += quantity;
-            }
-            else
-            {
-                cart[cartCount] = selectedProduct;
-                cartQty[cartCount] = quantity;
-                cartCount++;
-            }
-
-            Console.WriteLine("Product Added to Cart.");
 
             // =================================================================================== SECTION 7: ( RECEIPT DISPLAY ) =================================================================================== //
             Console.WriteLine("======================= RECEIPT =======================");
@@ -172,7 +186,7 @@ class Program
             {
                 double itemTotal = cart[i].GetItemtotal(cartQty[i]);
                 finalTotal += itemTotal;
-            }
+            } 
 
             Console.WriteLine($"Total Amount: {finalTotal}");
 
@@ -190,14 +204,14 @@ class Program
 
             Console.WriteLine($"Final Amount to Pay: {finalAmount}");
 
-            // =================================================================================== SECTION 10: ( LOOP [ !! UPDATED SECTION !! ] ) =================================================================================== //
+            // =================================================================================== SECTION 10: ( LOOP ) =================================================================================== //
             Console.WriteLine("");
             Console.WriteLine("Do you want to buy again? (y/n): ");
             choice = Console.ReadLine();
 
-            while (choice != "y" && choice != "Y" && choice != "n" && choice != "N")      //<.................................. [ RECENTLY ADDED for LOOPS ]
+            while (choice != "y" && choice != "Y" && choice != "n" && choice != "N")
             {
-                Console.WriteLine("Invalid Choice. Enter only (Y/y) or (N/n)");           //<.................................. [ RECENTLY ADDED for LOOPS ]
+                Console.WriteLine("Invalid Choice. Enter only (Y/y) or (N/n)");
                 choice = Console.ReadLine();
             }
             if (choice == "n" || choice == "N")
