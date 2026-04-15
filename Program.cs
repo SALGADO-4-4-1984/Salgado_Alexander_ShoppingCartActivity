@@ -1,4 +1,4 @@
-﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS ) =================================================================================== //
+﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS [ ! UPDATED ! ] ) =================================================================================== //
 using System;
 
 class Product
@@ -10,7 +10,7 @@ class Product
 
     public void DisplayProduct()
     {
-        Console.WriteLine($"ID: {Id}, Name: {Name}, Price: {Price}, Stock: {RemainingStock}");
+        Console.WriteLine($"{Id,-3} | {Name,-55}| {Price,10}, | {RemainingStock,5}");    //<.............. [ RECENTLY UPDATED for FORMATTED COLUMN ALIGNMENT in STORE MENU DISPLAY ]
     }
 
     public double GetItemtotal(int quantity)
@@ -51,7 +51,7 @@ class Program
 
         Product[] store = new Product[12];
 
-        store[0] = new Product { Id = 1, Name = "[MONITOR] 27-inch Gaming Monitor (144Hz IPS Display)", Price = 12000, RemainingStock = 15 };  //<.............. [ RECENTLY ADDED new products ]
+        store[0] = new Product { Id = 1, Name = "[MONITOR] 27-inch Gaming Monitor (144Hz IPS Display)", Price = 12000, RemainingStock = 15 }; 
         store[1] = new Product { Id = 2, Name = "[PHONE] ASUS ROG Phone 8 (Gaming Smartphone)", Price = 45000, RemainingStock = 10 };
         store[2] = new Product { Id = 3, Name = "[PC CASE] ATX Gaming PC Case (Tempered Glass)", Price = 2800, RemainingStock = 18 };
         store[3] = new Product { Id = 4, Name = "[MOTHERBOARD] MSI B550M Motherboard", Price = 6500, RemainingStock = 15 };
@@ -64,11 +64,13 @@ class Program
         store[10] = new Product { Id = 11, Name = "[KEYBOARD] Mechanical Gaming Keyboard", Price = 1200, RemainingStock = 30 };
         store[11] = new Product { Id = 12, Name = "[HEADSET] 7.1 Gaming Headset", Price = 1000, RemainingStock = 18 };
 
-        while (choice == "y" || choice == "Y")    //<.............. [ Moved store menu display inside the loop to refresh menu every time user buys again ]
+        while (choice == "y" || choice == "Y") 
         {
             Console.WriteLine("");
-            Console.WriteLine("=======================[ PC PARTS & ACCESSORIES STORE MENU ]=======================");        //<.............. [ Changed the STORE MENU title ]
+            Console.WriteLine("=======================[ PC PARTS & ACCESSORIES STORE MENU ]=======================");
             Console.WriteLine("");
+            Console.WriteLine("ID  | Name                                                   |     Price | Stock");                   //<.............. [ RECENTLY ADDED to Align the STORE MENU making it Easy to Read ]
+            Console.WriteLine("-----------------------------------------------------------------------------------");                //<.............. [ RECENTLY ADDED to seperate MENU TITLE CATEGORIES and ITEM LISTS BELOW ]
             for (int i = 0; i < store.Length; i++)
             {
                 store[i].DisplayProduct();
@@ -92,6 +94,7 @@ class Program
                 {
 
                     Console.WriteLine("Invalid Product ID Try Again");
+                    
 
                 }
             }
@@ -117,7 +120,7 @@ class Program
                 }
             }
 
-            // =================================================================================== SECTION 4: ( PRODUCT SELECTION [ ! UPDATED ! ] ) =================================================================================== //
+            // =================================================================================== SECTION 4: ( PRODUCT SELECTION ) =================================================================================== //
             Product selectedProduct = null;
 
             for (int i = 0; i < store.Length; ++i)
@@ -129,22 +132,22 @@ class Program
                 }
 
             }
-            if (selectedProduct != null && totalItems + quantity <= 10)   //<............................. [ UPDATED as OUTPUT Statement will not be shown when CART has reached greater than MAXIMUM of 10 items ]
+            if (selectedProduct != null && totalItems + quantity <= 10) 
             {
                 if (selectedProduct.RemainingStock == 0)
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("Sorry, This product is Out of Stock");    //<.................. [ RECENTLY ADDED for OUTPUT STATEMENT if specific selectedProduct is out of stock ]
+                    Console.WriteLine("Sorry, This product is Out of Stock");    
                 }
                 else
                 {
                     Console.WriteLine("");
-                    Console.WriteLine($"Product Found: {selectedProduct.Name}");   //<...................... [ Changed the Spelling Fouund to Found ]
+                    Console.WriteLine($"Product Found: {selectedProduct.Name}");
                 }
             }
 
 
-            // =================================================================================== SECTION 5: ( STOCK CHECK and PROCESSING [ ! UPDATED ! ] ) =================================================================================== //
+            // =================================================================================== SECTION 5: ( STOCK CHECK and PROCESSING ) =================================================================================== //
             bool isTransactionValid = false;
             if (selectedProduct == null)
             {
@@ -163,11 +166,11 @@ class Program
             else
             {
                 double total = selectedProduct.GetItemtotal(quantity);
-                selectedProduct.DeductStock(quantity);
+                //selectedProduct.DeductStock(finalQuantity); was here but migrated to section 6 for for correct quantity deduction ]
 
                 isTransactionValid = true;
 
-                if (totalItems + quantity <= 10)      //<............................. [ UPDATED as OUTPUT Statement will not be shown when CART has reached greater than MAXIMUM of 10 items ]
+                if (totalItems + quantity <= 10)
                 {
                     Console.WriteLine($"Added to cart! total Price of Specific Product Selected: {total}");
                     Console.WriteLine("");
@@ -175,19 +178,30 @@ class Program
 
             }
 
-            // =================================================================================== SECTION 6: ( CART DECLARATION and ADD TO CART [ ! UPDATED ! ] ) =================================================================================== //
-
+            // =================================================================================== SECTION 6: ( CART DECLARATION and ADD TO CART [ ! MAJOR UPDATED ! ] ) =================================================================================== //
+            int availableSpace = 10 - totalItems;         //<................... [ RECENTLY ADDED as max of 10 iems allowed, the extra ones remain in the stock ]
+            int finalQuantity = quantity;         //<................... [ RECENTLY ADDED as Finalized quantity ]
             if (isTransactionValid && selectedProduct != null)
             {
-                if (totalItems + quantity > 10)
+                if (quantity > availableSpace)
+                {
+                    finalQuantity = availableSpace;
+                    Console.WriteLine("");
+                    Console.WriteLine($"Only {availableSpace} items added due to CART MAX CAPACITY");    //<................... [ RECENTLY ADDED as System tells USER when CART adds its selectedProduct but the MAX is 10 and the extra ones remain in stock ]
+                    Console.WriteLine("");
+                }
+                if (availableSpace <= 0)
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("Cart is Full. Cannot ADD more items");
+                    Console.WriteLine("Cart is Full, Cannot ADD more items");      //<................... [ RECENTLY ADDED as CART is MAX, you cant add more ] 
                     Console.WriteLine("");
+                    return;
                 }
                 else
                 {
-                    int existingIndex = -1;         //<...................... [ Changed the Spelling of variable Exisiting to Existing ]
+                    selectedProduct.DeductStock(finalQuantity); //<.................. [ LINE OF CODE  originally from section 5 but now moved to section 6 to ensure stock is deducted only after finalQuantity is adjusted correctly  ]
+
+                    int existingIndex = -1;  
 
                     for (int i = 0; i < cartCount; i++)
                     {
@@ -199,22 +213,22 @@ class Program
                     }
                     if (existingIndex != -1)
                     {
-                        cartQty[existingIndex] += quantity;
+                        cartQty[existingIndex] += finalQuantity;  //<................... [ RECENTLY ADDED as quantity replaced into finalQuantity to make SYSTEM only accept max of 10 instead of users decision to add 11 or more items in cart ]
                     }
                     else
                     {
                         cart[cartCount] = selectedProduct;
-                        cartQty[cartCount] = quantity;
+                        cartQty[cartCount] = finalQuantity;
                         cartCount++;
                     }
-                    totalItems += quantity;
+                    totalItems += finalQuantity;
 
                     Console.WriteLine("Product Added to Cart");
                     Console.WriteLine("");
                 }
             }
 
-            // =================================================================================== SECTION 7: ( RECEIPT DISPLAY  ) =================================================================================== //
+            // =================================================================================== SECTION 7: ( RECEIPT DISPLAY ) =================================================================================== //
             Console.WriteLine("");
             Console.WriteLine("=======================[ RECEIPT ]=======================");
             Console.WriteLine("");
@@ -266,7 +280,7 @@ class Program
 
 
 
-            // =================================================================================== SECTION 10: ( LOOP [ ! UPDATED ! ] ) =================================================================================== //
+            // =================================================================================== SECTION 10: ( LOOP ) =================================================================================== //
             Console.WriteLine("");
             Console.WriteLine("Do you want to buy again? (y/n): ");
             Console.WriteLine("");
@@ -282,10 +296,10 @@ class Program
             if (choice == "n" || choice == "N")
             {
                 Console.WriteLine("");
-                Console.WriteLine("Purchase complete! Time to upgrade your gaming experience");       //<.............. [ Changed the STORE MENU closing message ]
+                Console.WriteLine("Purchase complete! Time to upgrade your gaming experience");  
                 Console.WriteLine("");
             }
-            // =================================================================================== DEAD END=================================================================================== //
+            // =================================================================================== DEAD END =================================================================================== //
 
 
         }
