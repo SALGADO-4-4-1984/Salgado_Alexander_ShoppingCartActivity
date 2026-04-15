@@ -1,4 +1,4 @@
-﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS [ ! UPDATED ! ] ) =================================================================================== //
+﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS ) =================================================================================== //
 using System;
 
 class Product
@@ -11,30 +11,30 @@ class Product
     public void DisplayProduct()
     {
         Console.WriteLine($"{Id,-3} | {Name,-55}| {Price,10}, | {RemainingStock,5}");
-        Console.WriteLine("-----------------------------------------------------------------------------------");  //<.............. [ RECENTLY ADDED as forgot to add this part to make it more organized ]
+        Console.WriteLine("-----------------------------------------------------------------------------------");
     }
 
     public double GetItemtotal(int quantity)
     {
-        return Price * quantity;
+        return Price * quantity;        //<..........// Price gets Multiplied Per Quantity
     }
 
     public bool HasEnoughStock(int quantity)
     {
         if (RemainingStock >= quantity)
         {
-            return true;
+            return true;         //<..........// enough stock available
         }
         else
         {
-            return false;
+            return false;        //<..........// not enough stock available
         }
     }
 
 
     public void DeductStock(int quantity)
     {
-        RemainingStock -= quantity;
+        RemainingStock -= quantity; //<......// Stock Reduces after Purchase. 
     }
 
 }
@@ -44,9 +44,9 @@ class Program
 
     static void Main(string[] args)
     {
-        string choice = "y";
-        Product[] cart = new Product[10];      
-        int[] cartQty = new int[10];          
+        string choice = "y";                //<............// [ A ] PROGRAM START
+        Product[] cart = new Product[10];                  // The program begins here. All variables are prepared such as the cart,   
+        int[] cartQty = new int[10];                       // total items, and the store products. This is the setup stage before any user interaction happens.
         int cartCount = 0;                   
         int totalItems = 0; 
 
@@ -66,9 +66,9 @@ class Program
         store[11] = new Product { Id = 12, Name = "[HEADSET] 7.1 Gaming Headset", Price = 1000, RemainingStock = 18 };
         store[12] = new Product { Id = 13, Name = "[CONSOLE] Steam Machine", Price = 45000, RemainingStock = 3 };
 
-        while (choice == "y" || choice == "Y") 
-        {
-            Console.WriteLine("");
+        while (choice == "y" || choice == "Y")  //<.............................. // [ B ] MAIN LOOP
+        {                                                                         // This loop keeps the store running. As long as the user enters "y",
+            Console.WriteLine("");                                                // the program will continue showing the menu and allowing purchases.
             Console.WriteLine("=======================[ PC PARTS & ACCESSORIES STORE MENU ]=======================");
             Console.WriteLine("");
             Console.WriteLine("ID  | Name                                                   |     Price | Stock");                 
@@ -83,18 +83,18 @@ class Program
             int productId = 0;
             bool isValidId = false;
 
-            while (!isValidId || productId <= 0)
-            {
-                Console.WriteLine("");
+            while (!isValidId || productId <= 0) //<..................// [ C ] ENTER PRODUCT ID
+            {                                                         // The program asks the user to input a product ID.
+                Console.WriteLine("");                                // This starts the process of selecting an item from the store.
                 Console.WriteLine("Enter Product ID: ");
 
                 string inputId = Console.ReadLine();
 
-                isValidId = int.TryParse(inputId, out productId);
-
-                if (!isValidId || productId <= 0)
-                {
-                    Console.WriteLine("");
+                isValidId = int.TryParse(inputId, out productId);  //<........................................................................... // [ D ] VALID INPUT?
+                                                                                                                                                  // The system checks if the entered product ID is a valid number.
+                if (!isValidId || productId <= 0)  //<......................... //[ D ERROR ]                                                     // This prevents errors from non-numeric input.
+                {                                                               // If the input is not valid or less than or equal to zero,
+                    Console.WriteLine("");                                      // the program informs the user and asks again until a correct input is given.
                     Console.WriteLine("Invalid Product ID Try Again");
                     
 
@@ -105,19 +105,19 @@ class Program
             int quantity = 0;
             bool isValidQty = false;
 
-            while (!isValidQty || quantity <= 0)
-            {
+            while (!isValidQty || quantity <= 0) //<........................// [ F ] ENTER QUANTITY
+            {                                                               // After selecting a product, the user is asked how many items they want to buy.
                 Console.WriteLine("");
                 Console.WriteLine("Enter Quantity: ");
 
                 string inputQty = Console.ReadLine();
 
-                isValidQty = int.TryParse(inputQty, out quantity);
-
-                if (!isValidQty || quantity <= 0)
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("Invalid Quantity Try Again");
+                isValidQty = int.TryParse(inputQty, out quantity);  //<.....................................// [ G ] VALID QUANTITY?
+                                                                                                            // The program checks if the quantity entered is a valid number.
+                if (!isValidQty || quantity <= 0)   //<........................// [ G ERROR ]
+                {                                                              // If the quantity is invalid or zero or negative,
+                    Console.WriteLine("");                                     // the program asks the user to input again.
+                    Console.WriteLine("Invalid Quantity Try Again");  
 
                 }
             }
@@ -127,8 +127,8 @@ class Program
 
             for (int i = 0; i < store.Length; ++i)
             {
-                if (store[i].Id == productId)
-                {
+                if (store[i].Id == productId)     //<.......................// [ E ] DOES PRODUCT EXIST?
+                {                                                           // The program searches the store list to find if the entered ID matches a product.
                     selectedProduct = store[i];
                     break;
                 }
@@ -136,35 +136,35 @@ class Program
             }
             if (selectedProduct != null && totalItems + quantity <= 10) 
             {
-                if (selectedProduct.RemainingStock == 0)
+                if (selectedProduct.RemainingStock == 0)         //<........................................................// [ I ] OUT OF STOCK?
+                {                                                                                                           // The program checks if the selected product has zero stock remaining.
+                    Console.WriteLine("");
+                    Console.WriteLine("Sorry, This product is Out of Stock");   //<................// [ I ERROR ]
+                }                                                                                  // If the product is out of stock, the user is informed
+                else                                                                               // and cannot proceed with this item.
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("Sorry, This product is Out of Stock");    
-                }
-                else
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine($"Product Found: {selectedProduct.Name}");
-                }
-            }
+                    Console.WriteLine($"Product Found: {selectedProduct.Name}");  //<............................// [ L ] PRODUCT FOUND
+                }                                                                                                // If everything is valid, the program confirms the product selection
+            }                                                                                                    // and displays its name to the user.
 
 
-            // =================================================================================== SECTION 5: ( STOCK CHECK and PROCESSING [ ! UPDATED ! ] ) =================================================================================== //
+            // =================================================================================== SECTION 5: ( STOCK CHECK and PROCESSING ) =================================================================================== //
             bool isTransactionValid = false;
-            if (selectedProduct == null)
-            {
+            if (selectedProduct == null)      //<.....................// [ E ERROR ]
+            {                                                         // If no matching product is found, the program displays an error
+                Console.WriteLine("");                                // and restarts the process from the beginning.
+                Console.WriteLine("Product not Found.");         
                 Console.WriteLine("");
-                Console.WriteLine("Product not Found.");
-                Console.WriteLine("");
-                continue;                                          //<.............. [ RECENTLY ADDED to return back to menu instead of showing receipt ]
+                continue;                                          
             }
 
-            else if (!selectedProduct.HasEnoughStock(quantity))
-            {
+            else if (!selectedProduct.HasEnoughStock(quantity))     //<........................................................// [ H ] ENOUGH STOCK?
+            {                                                                                                                  // The program checks if the store has enough stock for the requested quantity.
                 Console.WriteLine("");
-                Console.WriteLine("Not enough stock Available");
-                Console.WriteLine("");
-                continue;                                          //<.............. [ RECENTLY ADDED to return back to menu instead of showing receipt ]
+                Console.WriteLine("Not enough stock Available");     //<.......................// [ H ERROR ]
+                Console.WriteLine("");                                                         // If the stock is not enough, the program informs the user
+                continue;                                                                      // and restarts the process.                          
             }
 
             else
@@ -174,42 +174,43 @@ class Program
 
                 isTransactionValid = true;
 
-                if (totalItems + quantity <= 10)
-                {
+                if (totalItems + quantity <= 10)        //<.....................................................// [ J ] CART LIMIT CHECK
+                {                                                                                               // The program checks if adding this quantity will exceed the cart limit of 10 items.
                     Console.WriteLine($"Added to cart! total Price of Specific Product Selected: {total}");
                     Console.WriteLine("");
                 }
 
             }
 
-            // =================================================================================== SECTION 6: ( CART DECLARATION and ADD TO CART ) =================================================================================== //
-            int availableSpace = 10 - totalItems;         
+            // =================================================================================== SECTION 6: ( CART DECLARATION and ADD TO CART [ HARDEST PART ] ) =================================================================================== //
+
+            int availableSpace = 10 - totalItems;      //<........................// computes how many items can still fit in the cart (max is 10).
             int finalQuantity = quantity;         
-            if (isTransactionValid && selectedProduct != null)
+            if (isTransactionValid && selectedProduct != null)   //<........................// continues only if product is valid and transaction passed all checks.
             {
-                if (quantity > availableSpace)
+                if (quantity > availableSpace)        
                 {
                     finalQuantity = availableSpace;
                     Console.WriteLine("");
-                    Console.WriteLine($"Only {availableSpace} items added due to CART MAX CAPACITY");   
+                    Console.WriteLine($"Only {availableSpace} items added due to CART MAX CAPACITY");    //<...............................// [ J1 and K1 ]
+                    Console.WriteLine("");                                                                                                 // If the requested quantity is too large, only the allowed amount
+                }                                                                                                                          // based on remaining cart space will be added.
+                if (availableSpace <= 0)       //<.................................// [ K ] IS CART FULL?
+                {                                                                  // The program checks if the cart has already reached its maximum capacity.
                     Console.WriteLine("");
-                }
-                if (availableSpace <= 0)
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("Cart is Full, Cannot ADD more items");     
-                    Console.WriteLine("");
+                    Console.WriteLine("Cart is Full, Cannot ADD more items");     //<.............// [ K2 END ]
+                    Console.WriteLine("");                                                        // If the cart is full, the program stops adding items and ends execution of the program.
                     return;
                 }
                 else
                 {
                     selectedProduct.DeductStock(finalQuantity); 
 
-                    int existingIndex = -1;  
+                    int existingIndex = -1;    //<.................................// used to check if product already exists in cart.
 
                     for (int i = 0; i < cartCount; i++)
                     {
-                        if (cart[i].Id == selectedProduct.Id)
+                        if (cart[i].Id == selectedProduct.Id)    //<....................// found same product already in cart
                         {
                             existingIndex = i;
                             break;
@@ -217,7 +218,7 @@ class Program
                     }
                     if (existingIndex != -1)
                     {
-                        cartQty[existingIndex] += finalQuantity; 
+                        cartQty[existingIndex] += finalQuantity;  //<........................// update quantity if product already exists 
                     }
                     else
                     {
@@ -225,18 +226,18 @@ class Program
                         cartQty[cartCount] = finalQuantity;
                         cartCount++;
                     }
-                    totalItems += finalQuantity;
+                    totalItems += finalQuantity;   //<................// update total number of items in cart
 
-                    Console.WriteLine("Product Added to Cart");
-                    Console.WriteLine("");
-                }
+                    Console.WriteLine("Product Added to Cart");  //<...............// [ M ] ADD TO CART
+                    Console.WriteLine("");                                         // The selected product is added to the cart.
+                }                                                                  // Stock is reduced, and cart values are updated accordingly.
             }
 
-            // =================================================================================== SECTION 7: ( RECEIPT DISPLAY and STOCK UPDATE [ ! UPDATED ! ] ) =================================================================================== //
+            // =================================================================================== SECTION 7: ( RECEIPT DISPLAY and STOCK UPDATE ) =================================================================================== //
             Console.WriteLine("");
-            Console.WriteLine("==============================[ UPDATED STOCK AFTER CHECKOUT ]=============================");   //<................. [ RECENTLY ADDED for stock update after User Chooses product and Quantity in valid ]
-
-            for (int i = 0; i < store.Length; i++)
+            Console.WriteLine("==============================[ UPDATED STOCK AFTER CHECKOUT ]=============================");      //<................ // [ N ] UPDATED STOCK DISPLAY
+                                                                                                                                                       // After adding the product, the program shows the updated stock of all items,   
+            for (int i = 0; i < store.Length; i++)                                                                                                     // so the user can see the remaining availability.
             {
                 Console.WriteLine($"{store[i].Name,-55} Remaining Stocks Available: {store[i].RemainingStock,3}");
                 Console.WriteLine("------------------------------------------------------------------------------------------");
@@ -245,18 +246,18 @@ class Program
             Console.WriteLine("");
 
             Console.WriteLine("");
-            Console.WriteLine("=====================================[ RECEIPT ]===================================");
-            Console.WriteLine("");
-            Console.WriteLine($"Total Items In CART: {totalItems}");
-            if (totalItems == 10)
-            {
-                Console.WriteLine("Cart Capacity has Reached its Limit");
-            }
-            Console.WriteLine("");
+            Console.WriteLine("=====================================[ RECEIPT ]===================================");  //<....................................// [ Q ] RECEIPT DISPLAY
+            Console.WriteLine("");                                                                                                                            // The program begins displaying the receipt for the user's purchases.
+            Console.WriteLine($"Total Items In CART: {totalItems}");  //<...................................................// [ O and P1 ] TOTAL ITEMS
+            if (totalItems == 10)                                                                                           // Shows the total number of items currently inside the cart.
+            {                                                                                                               // Displays the total items count clearly to the user.
+                Console.WriteLine("Cart Capacity has Reached its Limit");   //<..................// [ P2 ]
+            }                                                                                    // If the cart has reached 10 items, the program informs the user
+            Console.WriteLine("");                                                               // that the maximum capacity has been reached.
 
-            for (int i = 0; i < cartCount; ++i)
-            {
-                double itemTotal = cart[i].GetItemtotal(cartQty[i]);
+            for (int i = 0; i < cartCount; ++i)                     //<..........// [ Q ] ITEM DETAILS DISPLAY
+            {                                                                    // Each product in the cart is listed along with quantity,
+                double itemTotal = cart[i].GetItemtotal(cartQty[i]);             // individual price, and total cost for that item.
 
                 Console.WriteLine($"Product: {cart[i].Name}, Qty: {cartQty[i]}, Price: {cart[i].Price}, Total: {itemTotal}");
 
@@ -270,22 +271,22 @@ class Program
                 double itemTotal = cart[i].GetItemtotal(cartQty[i]);
                 finalTotal += itemTotal;
             }
-            if (finalTotal < 5000)
-            {
-                Console.WriteLine($"Total Amount to Pay: {finalTotal}");
-            }
+            if (finalTotal < 5000)      //<......................................// [ R ] TOTAL COMPUTATION
+            {                                                                    // The program calculates the total cost of all items in the cart.
+                Console.WriteLine($"Total Amount to Pay: {finalTotal}");   //<.....................................// [ R1 ] NORMAL PURCHASE
+            }                                                                                                      // If the total is less than 5000, the program simply shows the total amount.
             if (finalTotal >= 5000)
             {
-                Console.WriteLine($"Origial Total Amount to Pay: {finalTotal}");
+                Console.WriteLine($"Origial Total Amount to Pay: {finalTotal}");                 
             }
 
             // =================================================================================== SECTION 9: ( DISCOUNT SYSTEM ) =================================================================================== //
             double discount = 0;
             double finalAmount = finalTotal;
 
-            if (finalTotal >= 5000)
-            {
-                discount = finalTotal * 0.10;
+            if (finalTotal >= 5000)  //<.................................// [ R2 ] DISCOUNT SYSTEM
+            {                                                            // If the total is 5000 or more, a 10 percent discount is applied.
+                discount = finalTotal * 0.10;                            // The final amount after discount is then displayed.
                 finalAmount = finalTotal - discount;
                 Console.WriteLine("");
                 Console.WriteLine("Discount Applied: 10%");
@@ -294,23 +295,24 @@ class Program
 
             // =================================================================================== SECTION 10: ( LOOP ) =================================================================================== //
             Console.WriteLine("");
-            Console.WriteLine("Do you want to buy again? (y/n): ");
-            Console.WriteLine("");
+            Console.WriteLine("Do you want to buy again? (y/n): ");   //<............................// [ S ] BUY AGAIN?
+            Console.WriteLine("");                                                                   // The program asks the user if they want to continue shopping.
             choice = Console.ReadLine();
 
-            while (choice != "y" && choice != "Y" && choice != "n" && choice != "N")
-            {
-                Console.WriteLine("");
-                Console.WriteLine("Invalid Choice. Enter only (Y/y) or (N/n): ");
-                Console.WriteLine("");
+            while (choice != "y" && choice != "Y" && choice != "n" && choice != "N")    //<.............// [ T and T2 ]
+            {                                                                                           // The program ensures the user only enters valid choices (y or n).
+                Console.WriteLine("");                                                                  // This continues validation to make sure the loop decision is correct.
+                Console.WriteLine("Invalid Choice. Enter only (Y/y) or (N/n): ");   //<.....// [ T1 ]
+                Console.WriteLine("");                                                      // If the input is invalid, the user is asked again until a correct choice is given.
                 choice = Console.ReadLine();
             }
-            if (choice == "n" || choice == "N")
-            {
+            if (choice == "n" || choice == "N")    //<...................// [ U ] USER SELECTED NO
+            {                                                            // If the user chooses not to continue, the loop will end.
                 Console.WriteLine("");
-                Console.WriteLine("Purchase complete! Time to upgrade your gaming experience");  
-                Console.WriteLine("");
+                Console.WriteLine("Purchase complete! Time to upgrade your gaming experience");  //<.............// [ V ] PROGRAM END
+                Console.WriteLine("");                                                                           // The program finishes and displays a final message confirming the purchase is complete.
             }
+
             // =================================================================================== DEAD END =================================================================================== //
 
 
