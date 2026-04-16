@@ -86,6 +86,25 @@ I relied on AI to:
 * Check errors and improve code
 * Guide me in building the system step by step
 
+Additional AI Usage Details
+
+Examples of prompts/questions I asked AI:
+* How to build a shopping cart system step by step in C#
+* How to use int.TryParse for input validation
+* How to check if a product has enough stock
+* How to prevent duplicate items in the cart
+* How to compute total and apply discount
+* How to fix errors and improve my code logic
+
+What I improved after using AI:
+* Added proper input validation for product ID and quantity
+* Improved stock checking and handling of out of stock products
+* Fixed logic for adding items to cart and preventing duplicates
+* Added cart limit system and validation
+* Implemented discount system for total amount
+* Improved overall structure and readability of the program
+* Added detailed comments and alphabetical labeling to understand the flow
+
 Even though I used AI a lot, I made sure to:
 
 * Review the code carefully
