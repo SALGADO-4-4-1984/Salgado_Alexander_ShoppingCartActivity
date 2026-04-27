@@ -44,6 +44,9 @@ class Program
 
     static void Main(string[] args)
     {
+        ///////////////////// Cart limit is based on TOTAL quantity of items ( Maximum of 10 Items Total ) /////////////////////
+        /////////////////////    Example: 5 RAM + 5 PROCESSORS = FULL CART ( Makes it 10 Items Total )     /////////////////////
+
         string choice = "y";                //<............// [ A ] PROGRAM START
         Product[] cart = new Product[10];                  // The program begins here. All variables are prepared such as the cart,   
         int[] cartQty = new int[10];                       // total items, and the store products. This is the setup stage before any user interaction happens.
@@ -78,7 +81,23 @@ class Program
                 store[i].DisplayProduct();
             }
 
-            // =================================================================================== SECTION 3: ( USER INPUT ) =================================================================================== //
+            // =================================================================================== SECTION 3: ( USER INPUT ) [ ! UPDATED ! ] =================================================================================== //
+
+            Console.WriteLine("");
+            Console.WriteLine("=================================[ CART MENU ]====================================="); 
+            Console.WriteLine("");
+            Console.WriteLine("1. ADD ITEM");                                                             ///////////////////// [ Recently Added ] CART MENU SYSTEM (Not Functionable yet) /////////////////////
+            Console.WriteLine("2. VIEW CART");
+            Console.WriteLine("3. REMOVE ITEM");
+            Console.WriteLine("4. UPDATE QUANTITY");
+            Console.WriteLine("5. CLEAR CART");
+            Console.WriteLine("6. CHECKOUT");
+            Console.WriteLine("");
+            Console.WriteLine("===================================================================================");
+            Console.WriteLine("");
+            Console.WriteLine("ENTER CHOICE: ");
+
+            string menuChoice = Console.ReadLine();
 
             int productId = 0;
             bool isValidId = false;
@@ -234,6 +253,7 @@ class Program
             }
 
             // =================================================================================== SECTION 7: ( RECEIPT DISPLAY and STOCK UPDATE ) =================================================================================== //
+            ///////////////////// TO DO: Move this section to CHECKOUT phase (Part 2 Requirement) ///////////////////
             Console.WriteLine("");
             Console.WriteLine("==============================[ UPDATED STOCK AFTER CHECKOUT ]=============================");      //<................ // [ N ] UPDATED STOCK DISPLAY
                                                                                                                                                        // After adding the product, the program shows the updated stock of all items,   
@@ -244,6 +264,8 @@ class Program
                  
             }
             Console.WriteLine("");
+
+            /////////////////// TO DO: Receipt should only appear during checkout ///////////////////
 
             Console.WriteLine("");
             Console.WriteLine("=====================================[ RECEIPT ]===================================");  //<....................................// [ Q ] RECEIPT DISPLAY
