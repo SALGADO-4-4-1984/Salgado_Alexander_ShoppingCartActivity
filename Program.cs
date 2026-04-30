@@ -1,5 +1,6 @@
 ﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS ) =================================================================================== //
 using System;
+using System.Xml;
 
 class Product
 {
@@ -38,7 +39,7 @@ class Product
     }
 
 }
-// =================================================================================== SECTION 2: ( STORE MENU ) =================================================================================== //
+// =================================================================================== SECTION 2: ( STORE MENU ) [ UPDATED ]=================================================================================== //
 class Program
 {
 
@@ -51,7 +52,8 @@ class Program
         Product[] cart = new Product[10];                  // The program begins here. All variables are prepared such as the cart,   
         int[] cartQty = new int[10];                       // total items, and the store products. This is the setup stage before any user interaction happens.
         int cartCount = 0;                   
-        int totalItems = 0; 
+        int totalItems = 0;
+        int receiptCounter = 1;  ///////////////////// [ Recently Added ] As Receipt Counter Variable /////////////////////
 
         Product[] store = new Product[13];
 
@@ -457,8 +459,8 @@ class Program
                 
 
 
-                // =================================================================================== SECTION 7: ( RECEIPT DISPLAY and STOCK UPDATE )=================================================================================== //
-                ///////////////////// TO DO: Move this section to CHECKOUT phase (Part 2 Requirement) ///////////////////
+                // =================================================================================== SECTION 7: ( RECEIPT DISPLAY and STOCK UPDATE ) [ UPDATED ]=================================================================================== //
+                
                 Console.WriteLine("");
                 Console.WriteLine("==============================[ UPDATED STOCK AFTER CHECKOUT ]=============================");      //<................ // [ N ] UPDATED STOCK DISPLAY
                                                                                                                                        // After adding the product, the program shows the updated stock of all items,   
@@ -475,6 +477,9 @@ class Program
                 Console.WriteLine("");
                 Console.WriteLine("=====================================[ RECEIPT ]===================================");  //<....................................// [ Q ] RECEIPT DISPLAY
                 Console.WriteLine("");                                                                                                                            // The program begins displaying the receipt for the user's purchases.
+                Console.WriteLine($"Receipt No: {receiptCounter:D4}");    ///////////////////// [ Recently Added ] For tracking receipt count and date time of receipt record /////////////////////
+                Console.WriteLine($"Date: {DateTime.Now}");
+                Console.WriteLine("");
                 Console.WriteLine($"Total Items In CART: {totalItems}");  //<...................................................// [ O and P1 ] TOTAL ITEMS
                 if (totalItems == 10)                                                                                           // Shows the total number of items currently inside the cart.
                 {                                                                                                               // Displays the total items count clearly to the user.
@@ -507,7 +512,7 @@ class Program
                     Console.WriteLine($"Origial Total Amount to Pay: {finalTotal}");
                 }
 
-                // =================================================================================== SECTION 9: ( DISCOUNT SYSTEM ) =================================================================================== //
+                // =================================================================================== SECTION 9: ( DISCOUNT SYSTEM )=================================================================================== //
                 double discount = 0;
                 double finalAmount = finalTotal;
 
@@ -518,9 +523,60 @@ class Program
                     Console.WriteLine("");
                     Console.WriteLine("Discount Applied: 10%");
                     Console.WriteLine($"Final Amount to Pay With Discount: {finalAmount}");
+
+                    
                 }
 
-                // =================================================================================== SECTION 10: ( LOOP ) =================================================================================== //
+                // =================================================================================== SECTION 9.1 ( PAYMENT SYSTEM ) [ NEW ]=================================================================================== //
+                double payment = 0;
+                bool isValidPayment = false;                             ///////////////////// [ Recently Added ] For User to ADD amount of Cash to Pay the Final Price /////////////////////
+
+                while (!isValidPayment || payment < finalAmount)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine($"Final Total: {finalAmount}");
+                    Console.WriteLine("Enter Payment: ");
+
+                    string paymentInput = Console.ReadLine();
+
+                    isValidPayment = double.TryParse(paymentInput, out payment);
+
+                    if (!isValidPayment)
+                    {
+                        Console.WriteLine("Invalid Input. Please Enter a VALID Amount.");
+                        continue;
+                    }
+
+                    if (payment < finalAmount)
+                    {
+                        Console.WriteLine("Insufficient Payment. Please enter enough Amount.");
+                    }
+                }
+
+                double change = payment - finalAmount;
+
+                Console.WriteLine($"Payment: {payment}");
+                Console.WriteLine($"Change: {change}");
+
+                // =================================================================================== SECTION 9.2 ( LOW STOCK NOTIFIER ) [ NEW ]=================================================================================== //
+                Console.WriteLine("");
+                Console.WriteLine("LOW STOCK ALERT:");                 ///////////////////// [ Recently Added ] For User to See IF Any stocks on product are low /////////////////////
+
+                bool hasLowStock = false;
+                for (int i = 0; i < store.Length; i++)
+                {
+                    if (store[i].RemainingStock <= 5)
+                    {
+                        Console.WriteLine($"{store[i].Name} has only {store[i].RemainingStock} stocks left.");
+                        hasLowStock = true;
+                    }
+                }
+
+                if (!hasLowStock)
+                {
+                    Console.WriteLine("All products have sufficient stock.");
+                }
+                // =================================================================================== SECTION 10: ( LOOP ) [ UPDATED ]=================================================================================== //
                 Console.WriteLine("");
                 Console.WriteLine("Do you want to buy again? (y/n): ");   //<............................// [ S ] BUY AGAIN?
                 Console.WriteLine("");                                                                   // The program asks the user if they want to continue shopping. 
@@ -540,6 +596,7 @@ class Program
                     Console.WriteLine("");                                                                           // The program finishes and displays a final message confirming the purchase is complete.
                 }
 
+                receiptCounter++;    ///////////////////// [ Recently Added ] For tracking receipt count /////////////////////  
 
             }
 
