@@ -221,7 +221,7 @@ class Program
                         Console.WriteLine("");
                         Console.WriteLine("Cart is Full, Cannot ADD more items");     //<.............// [ K2 END ]
                         Console.WriteLine("");                                                        // If the cart is full, the program stops adding items and ends execution of the program.
-                        return;
+                        continue;
                     }
                     else
                     {
@@ -288,7 +288,7 @@ class Program
                 Console.WriteLine("");
                 Console.WriteLine("================== REMOVE ITEM ==================");
 
-                if (cartCount == 0)                                            ///////////////////// [ Recently Added ] Choice 3 Becomes Fully Functionable as an REMOVE ITEM function /////////////////////
+                if (cartCount == 0)                                            
                 {
                     Console.WriteLine("Cart is Empty, There Isn't anything to remove.");
                 }
@@ -334,59 +334,95 @@ class Program
 
 
             }
-
-            else if (menuChoice == "4") // =========================================================[ CHOICE 4 SECTION ] [ UPDATE QUANTITY ]======================================================= //
+            // =========================================================[ CHOICE 4 SECTION ] [ UPDATE QUANTITY ] ( ! MAJOR UPDATED ! ) [ HARDEST PART ] ======================================================= //
+            else if (menuChoice == "4")
             {
                 Console.WriteLine("");
-                Console.WriteLine("================== UPDATE QUANTITY ==================");
+                Console.WriteLine("================== UPDATE QUANTITY =================="); 
 
-                if (cartCount == 0)                                            ///////////////////// [ Recently Added ] Choice 4 Becomes Fully Functionable as for Updating Quantity /////////////////////
+                if (cartCount == 0)
                 {
-                    Console.WriteLine("Cart is Empty");
+                    Console.WriteLine("Cart is Empty"); 
+                    continue;
+                }
+
+                for (int i = 0; i < cartCount; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {cart[i].Name} (Qty: {cartQty[i]})");  //<...... (prints each product in the cart with its number and current quantity so the user can choose what to update.)
+                }
+
+                Console.WriteLine("");
+                Console.WriteLine("Enter item number to Update: ");
+                string input = Console.ReadLine();
+
+                int index;
+                bool isValid = int.TryParse(input, out index);          //<....................... (converts the user input into a number safely and checks if it is valid.)
+
+                if (!isValid || index <= 0 || index > cartCount)        //<....................... (checks if the selected item number is invalid or outside the cart range.)
+                {
+                    Console.WriteLine("Invalid Choice");
+                    continue;
+                }
+
+                index--;                                                //<....................... (adjusts the user input from 1-based numbering to 0-based array indexing.)
+
+                Console.WriteLine($"you selected: {cart[index].Name}");
+
+                Console.WriteLine("Enter new quantity: ");
+                string qtyInput = Console.ReadLine();
+
+                int newQty;
+                bool isValidQty = int.TryParse(qtyInput, out newQty);   //<....................... (converts the new quantity input into a number and checks if it is valid.)
+
+                if (!isValidQty || newQty <= 0)                         //<....................... (checks if the new quantity is invalid or less than or equal to zero.)
+                {
+                    Console.WriteLine("Invalid Quantity");
+                    continue;
+                }
+
+                int oldQty = cartQty[index];                            //<....................... (gets the current quantity of the selected item in the cart.)
+                int difference = newQty - oldQty;                       //<....................... (calculates how much the quantity has increased or decreased.)
+
+
+                if (difference == 0)                                    //<....................... (checks if the user did not change the quantity at all.)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Quantity remains unchanged...");
+                    continue;
+                }
+
+                
+                if (difference > 0 && totalItems + difference > 10)     //<....................... (checks if increasing quantity will exceed cart limit of 10 items and prevents the update if it does.)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Cannot Update Quantity.");
+                    Console.WriteLine("Cart Limit of 10 Items will be Exceeded.");
+                    continue;
+                }
+
+                
+                if (difference > 0)                                      //<....................... (handles case when quantity is increased.)
+                {
+                    if (!cart[index].HasEnoughStock(difference))         //<....................... (if the store has enough stock to increase the quantity.)
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("Not Enough Stock to Increase Quantity");
+                        continue;
+                    }
+
+                    cart[index].DeductStock(difference);                 //<....................... (removes the added quantity from the product stock.)
                 }
                 else
                 {
-                    for (int i = 0; i < cartCount; i++)
-                    {
-                        Console.WriteLine($"{i + 1}. {cart[i].Name} (Qty: {cartQty[i]})");
-                    }
-                    Console.WriteLine("");
-
-                    Console.WriteLine("Enter item number to Update: ");
-                    string input = Console.ReadLine();
-
-                    int index;
-                    bool isValid = int.TryParse(input, out index);
-
-                    if (!isValid || index <= 0 || index > cartCount)
-                    {
-                        Console.WriteLine("Invalid Choice");
-                    }
-                    else
-                    {
-                        index--;
-
-                        Console.WriteLine($"you selected: {cart[index].Name}");
-
-                        Console.WriteLine("Enter new quantity: ");
-                        string qtyInput = Console.ReadLine();
-
-                        int newQty;
-                        bool isValidQty = int.TryParse((qtyInput), out newQty);
-
-                        if (!isValidQty || newQty <= 0)
-                        {
-                            Console.WriteLine("Invalid Quantity");
-                        }
-                        else
-                        {
-                            cartQty[index] = newQty;
-                            Console.WriteLine("Quantity Updated Successfully...");
-                        }
-
-                    }
-
+                    cart[index].RemainingStock += Math.Abs(difference);  //<....................... (returns the removed quantity back to the product stock.)
                 }
+
+                
+                cartQty[index] = newQty;                                 //<....................... (updates the quantity of the selected item in the cart.)
+                totalItems += difference;                                //<....................... (updates total cart item count by adding the difference from the quantity change.)
+
+                Console.WriteLine("");
+                Console.WriteLine("Quantity Updated Successfully...");
             }
 
             else if (menuChoice == "5") // =========================================================[ CHOICE 5 SECTION ] [ CLEAR CART ]======================================================= //
@@ -396,7 +432,7 @@ class Program
                     Console.WriteLine("");
                     Console.WriteLine("================== REMOVE ITEM ==================");
 
-                    if (cartCount == 0)                                            ///////////////////// [ Recently Added ] Choice 5 Becomes Fully Functionable as an CLEAR CART function /////////////////////                                              
+                    if (cartCount == 0)                                                                                          
                     {
                         Console.WriteLine("Cart is already empty...");
                     }
