@@ -1,4 +1,4 @@
-﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS ) =================================================================================== //
+﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS ) [ UPDATED ]=================================================================================== //
 using System;
 using System.Xml;
 
@@ -8,11 +8,13 @@ class Product
     public string Name;
     public double Price;
     public int RemainingStock;
-
+    public string Category;    //////////////////// [ RECENTLY ADDED ] for Category field class ////////////////////
     public void DisplayProduct()
     {
-        Console.WriteLine($"{Id,-3} | {Name,-55}| {Price,10}, | {RemainingStock,5}");
-        Console.WriteLine("-----------------------------------------------------------------------------------");
+        Console.WriteLine(
+            $"{Id,-3} | {Name,-65} | {Category,-20} | {Price,12:N0} | {RemainingStock,5}"
+        );
+        Console.WriteLine("---------------------------------------------------------------------------------------------------------------------");
     }
 
     public double GetItemtotal(int quantity)
@@ -39,7 +41,7 @@ class Product
     }
 
 }
-// =================================================================================== SECTION 2: ( STORE MENU ) [ UPDATED ]=================================================================================== //
+// =================================================================================== SECTION 2: ( STORE MENU ) [ UPDATED ] =================================================================================== //
 class Program
 {
 
@@ -53,40 +55,54 @@ class Program
         int[] cartQty = new int[10];                       // total items, and the store products. This is the setup stage before any user interaction happens.
         int cartCount = 0;                   
         int totalItems = 0;
-        int receiptCounter = 1;  ///////////////////// [ Recently Added ] As Receipt Counter Variable /////////////////////
+        int receiptCounter = 1;
+        string[] orderHistory = new string[10]; //////////////////// [ RECENTLY ADDED ] for order history of user record ////////////////////
+        int orderCount = 0;
 
-        Product[] store = new Product[13];
+        Product[] store = new Product[13];           //////////////////// [ RECENTLY UPDATED ] added space to each product to make it readable and added categories ////////////////////
 
-        store[0] = new Product { Id = 1, Name = "[MONITOR] 27-inch Gaming Monitor (144Hz IPS Display)", Price = 12000, RemainingStock = 15 }; 
-        store[1] = new Product { Id = 2, Name = "[PHONE] ASUS ROG Phone 8 (Gaming Smartphone)", Price = 45000, RemainingStock = 10 };
-        store[2] = new Product { Id = 3, Name = "[PC CASE] ATX Gaming PC Case (Tempered Glass)", Price = 2800, RemainingStock = 18 };
-        store[3] = new Product { Id = 4, Name = "[MOTHERBOARD] MSI B550M Motherboard", Price = 6500, RemainingStock = 15 };
-        store[4] = new Product { Id = 5, Name = "[GPU] NVIDIA RTX 3060 12GB", Price = 18000, RemainingStock = 8 };
-        store[5] = new Product { Id = 6, Name = "[RAM] 16GB DDR4 RAM (8x2)", Price = 3200, RemainingStock = 25 };
-        store[6] = new Product { Id = 7, Name = "[PROCESSOR] AMD Ryzen 5 5600X", Price = 9500, RemainingStock = 12 };
-        store[7] = new Product { Id = 8, Name = "[STORAGE] 1TB NVMe SSD", Price = 3500, RemainingStock = 20 };
-        store[8] = new Product { Id = 9, Name = "[POWER SUPPLY] 650W 80+ Bronze PSU", Price = 2800, RemainingStock = 18 };
-        store[9] = new Product { Id = 10, Name = "[MOUSE] RGB Gaming Mouse", Price = 1200, RemainingStock = 30 };
-        store[10] = new Product { Id = 11, Name = "[KEYBOARD] Mechanical Gaming Keyboard", Price = 1200, RemainingStock = 30 };
-        store[11] = new Product { Id = 12, Name = "[HEADSET] 7.1 Gaming Headset", Price = 1000, RemainingStock = 18 };
-        store[12] = new Product { Id = 13, Name = "[CONSOLE] Steam Machine", Price = 45000, RemainingStock = 3 };
+        store[0] = new Product { Id = 1, Name = "[MONITOR] 27-inch Gaming Monitor (144Hz IPS Display)", Category = "Monitor / Display", Price = 12000, RemainingStock = 15 }; 
+
+        store[1] = new Product { Id = 2, Name = "[PHONE] ASUS ROG Phone 8 (Gaming Smartphone)", Category = "Smartphone", Price = 45000, RemainingStock = 10 };
+
+        store[2] = new Product { Id = 3, Name = "[PC CASE] ATX Gaming PC Case (Tempered Glass)", Category = "PC Case / Chassis", Price = 2800, RemainingStock = 18 };
+
+        store[3] = new Product { Id = 4, Name = "[MOTHERBOARD] MSI B550M Motherboard", Category = "Motherboard", Price = 6500, RemainingStock = 15 };
+
+        store[4] = new Product { Id = 5, Name = "[GPU] NVIDIA RTX 3060 12GB", Category = "GPU / Graphics Card", Price = 18000, RemainingStock = 8 };
+
+        store[5] = new Product { Id = 6, Name = "[RAM] 16GB DDR4 RAM (8x2)", Category = "Memory (RAM)", Price = 3200, RemainingStock = 25 };
+
+        store[6] = new Product { Id = 7, Name = "[PROCESSOR] AMD Ryzen 5 5600X", Category = "Processor (CPU)", Price = 9500, RemainingStock = 12 };
+
+        store[7] = new Product { Id = 8, Name = "[STORAGE] 1TB NVMe SSD", Category = "Storage (SSD)", Price = 3500, RemainingStock = 20 };
+
+        store[8] = new Product { Id = 9, Name = "[POWER SUPPLY] 650W 80+ Bronze PSU", Category = "Power Supply", Price = 2800, RemainingStock = 18 };
+
+        store[9] = new Product { Id = 10, Name = "[MOUSE] RGB Gaming Mouse", Category = "Peripherals (Mouse)", Price = 1200, RemainingStock = 30 };
+
+        store[10] = new Product { Id = 11, Name = "[KEYBOARD] Mechanical Gaming Keyboard", Category = "Peripherals (Keyboard)", Price = 1200, RemainingStock = 30 };
+
+        store[11] = new Product { Id = 12, Name = "[HEADSET] 7.1 Gaming Headset", Category = "Audio / Headset", Price = 1000, RemainingStock = 18 };
+
+        store[12] = new Product { Id = 13, Name = "[CONSOLE] Steam Machine", Category = "Gaming Console", Price = 45000, RemainingStock = 3 };
 
         while (choice == "y" || choice == "Y")  //<.............................. // [ B ] MAIN LOOP
         {                                                                         // This loop keeps the store running. As long as the user enters "y",
             Console.WriteLine("");                                                // the program will continue showing the menu and allowing purchases.
-            Console.WriteLine("=======================[ PC PARTS & ACCESSORIES STORE MENU ]=======================");
+            Console.WriteLine("=========================================[ PC PARTS & ACCESSORIES STORE MENU ]=======================================");
             Console.WriteLine("");
-            Console.WriteLine("ID  | Name                                                   |     Price | Stock");                 
-            Console.WriteLine("-----------------------------------------------------------------------------------");                
+            Console.WriteLine("ID  | Name                                                              | Category             | Price        | Stock");
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------------------");                
             for (int i = 0; i < store.Length; i++)
             {
                 store[i].DisplayProduct();
             }
 
-            // =================================================================================== SECTION 3: ( USER INPUT ) [ ! UPDATED ! ] =================================================================================== //
+            // =================================================================================== SECTION 3: ( USER INPUT ) [ UPDATED ] =================================================================================== //
 
             Console.WriteLine("");
-            Console.WriteLine("=================================[ CART MENU ]====================================="); 
+            Console.WriteLine("==================================================[ CART MENU ]======================================================"); 
             Console.WriteLine("");
             Console.WriteLine("1. ADD ITEM");                                                             
             Console.WriteLine("2. VIEW CART");
@@ -94,8 +110,10 @@ class Program
             Console.WriteLine("4. UPDATE QUANTITY");
             Console.WriteLine("5. CLEAR CART");
             Console.WriteLine("6. CHECKOUT");
+            Console.WriteLine("7. SEARCH PRODUCT");      //////////////////// [ RECENTLY ADDED ] for search product ////////////////////
+            Console.WriteLine("8. VIEW ORDER HISTORY");  //////////////////// [ RECENTLY ADDED ] for order history option in cart menu ////////////////////
             Console.WriteLine("");
-            Console.WriteLine("===================================================================================");
+            Console.WriteLine("=====================================================================================================================");
             Console.WriteLine("");
             Console.WriteLine("ENTER CHOICE: ");
 
@@ -259,7 +277,7 @@ class Program
 
             
 
-            else if (menuChoice == "2") // =========================================================[ CHOICE 2 SECTION ] [ VIEW CART ]======================================================= //
+            else if (menuChoice == "2") // =========================================================[ CHOICE 2 SECTION ] [ VIEW CART ] [ UPDATED ]======================================================= //
             {
 
                 Console.WriteLine("");
@@ -275,6 +293,7 @@ class Program
                         double itemTotal = cart[i].GetItemtotal(cartQty[i]);
 
                         Console.WriteLine($"Product: {cart[i].Name}");
+                        Console.WriteLine($"Category: {cart[i].Category}");        ////////// [ RECENTLY UPDATED ] added category //////////
                         Console.WriteLine($"Quantity: {cartQty[i]}");
                         Console.WriteLine($"Price: {cart[i].Price}");
                         Console.WriteLine($"Total: {itemTotal}");
@@ -432,7 +451,7 @@ class Program
                 Console.WriteLine("");
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("================== REMOVE ITEM ==================");
+                    Console.WriteLine("================== CLEAR CART ==================");
 
                     if (cartCount == 0)                                                                                          
                     {
@@ -453,13 +472,13 @@ class Program
                 }
             }
 
-            else if (menuChoice == "6")  // ========================================================[ CHOICE 6 SECTION ] [ CHECKOUT ]======================================================= //
+            else if (menuChoice == "6")  // ========================================================[ CHOICE 6 SECTION ] [ CHECKOUT ] [ UPDATED ] ======================================================= //
             {
 
                 
 
 
-                // =================================================================================== SECTION 7: ( RECEIPT DISPLAY and STOCK UPDATE ) [ UPDATED ]=================================================================================== //
+                // =================================================================================== SECTION 7: ( RECEIPT DISPLAY and STOCK UPDATE ) [ UPDATED ] =================================================================================== //
                 
                 Console.WriteLine("");
                 Console.WriteLine("==============================[ UPDATED STOCK AFTER CHECKOUT ]=============================");      //<................ // [ N ] UPDATED STOCK DISPLAY
@@ -477,7 +496,7 @@ class Program
                 Console.WriteLine("");
                 Console.WriteLine("=====================================[ RECEIPT ]===================================");  //<....................................// [ Q ] RECEIPT DISPLAY
                 Console.WriteLine("");                                                                                                                            // The program begins displaying the receipt for the user's purchases.
-                Console.WriteLine($"Receipt No: {receiptCounter:D4}");    ///////////////////// [ Recently Added ] For tracking receipt count and date time of receipt record /////////////////////
+                Console.WriteLine($"Receipt No: {receiptCounter:D4}");    
                 Console.WriteLine($"Date: {DateTime.Now}");
                 Console.WriteLine("");
                 Console.WriteLine($"Total Items In CART: {totalItems}");  //<...................................................// [ O and P1 ] TOTAL ITEMS
@@ -491,7 +510,7 @@ class Program
                 {                                                                    // Each product in the cart is listed along with quantity,
                     double itemTotal = cart[i].GetItemtotal(cartQty[i]);             // individual price, and total cost for that item.
 
-                    Console.WriteLine($"Product: {cart[i].Name}, Qty: {cartQty[i]}, Price: {cart[i].Price}, Total: {itemTotal}");
+                    Console.WriteLine($"Product: {cart[i].Name}, Category: {cart[i].Category}, Qty: {cartQty[i]}, Price: {cart[i].Price}, Total: {itemTotal}"); ////////// [ RECENTLY UPDATED ] added category //////////
 
                 }
 
@@ -527,9 +546,9 @@ class Program
                     
                 }
 
-                // =================================================================================== SECTION 9.1 ( PAYMENT SYSTEM ) [ NEW ]=================================================================================== //
+                // =================================================================================== SECTION 9.1 ( PAYMENT SYSTEM ) =================================================================================== //
                 double payment = 0;
-                bool isValidPayment = false;                             ///////////////////// [ Recently Added ] For User to ADD amount of Cash to Pay the Final Price /////////////////////
+                bool isValidPayment = false;                            
 
                 while (!isValidPayment || payment < finalAmount)
                 {
@@ -558,9 +577,9 @@ class Program
                 Console.WriteLine($"Payment: {payment}");
                 Console.WriteLine($"Change: {change}");
 
-                // =================================================================================== SECTION 9.2 ( LOW STOCK NOTIFIER ) [ NEW ]=================================================================================== //
+                // =================================================================================== SECTION 9.2 ( LOW STOCK NOTIFIER ) =================================================================================== //
                 Console.WriteLine("");
-                Console.WriteLine("LOW STOCK ALERT:");                 ///////////////////// [ Recently Added ] For User to See IF Any stocks on product are low /////////////////////
+                Console.WriteLine("LOW STOCK ALERT:");                
 
                 bool hasLowStock = false;
                 for (int i = 0; i < store.Length; i++)
@@ -576,7 +595,7 @@ class Program
                 {
                     Console.WriteLine("All products have sufficient stock.");
                 }
-                // =================================================================================== SECTION 10: ( LOOP ) [ UPDATED ]=================================================================================== //
+                // =================================================================================== SECTION 10: ( LOOP ) [ UPDATED ] =================================================================================== //
                 Console.WriteLine("");
                 Console.WriteLine("Do you want to buy again? (y/n): ");   //<............................// [ S ] BUY AGAIN?
                 Console.WriteLine("");                                                                   // The program asks the user if they want to continue shopping. 
@@ -596,13 +615,60 @@ class Program
                     Console.WriteLine("");                                                                           // The program finishes and displays a final message confirming the purchase is complete.
                 }
 
-                receiptCounter++;    ///////////////////// [ Recently Added ] For tracking receipt count /////////////////////  
+                receiptCounter++;
+                orderHistory[orderCount] =
+                    $"Receipt #{receiptCounter - 1:D4} - Total: {finalAmount}";   //////////////////// [ RECENTLY ADDED ] for order history function ////////////////////
+                orderCount++;
+               
 
+            }
+
+            else if (menuChoice == "7")  // ========================================================[ CHOICE 7 SECTION ] [ SEARCH PRODUCT ] [ NEW ] ======================================================= //
+            {
+                Console.WriteLine("");
+                Console.WriteLine("================== SEARCH PRODUCT ==================");
+
+                Console.WriteLine("Enter product name to search: ");
+                string search = Console.ReadLine().ToLower();
+
+                bool found = false;
+
+                for (int i = 0; i < store.Length; i++)
+                {
+                    if (store[i].Name.ToLower().Contains(search)) 
+                    {
+                        Console.WriteLine($"{store[i].Id}. {store[i].Name} | {store[i].Category} - PHP {store[i].Price} - Stock: {store[i].RemainingStock}");
+                        found = true;
+                    }
+                }
+
+                if (!found)
+                {
+                    Console.WriteLine("No matching product found.");
+                }
+            }
+
+            else if (menuChoice == "8") // ========================================================[ CHOICE 8 SECTION ] [ ORDER HISTORY ] [ NEW ] ======================================================= //
+            {
+                Console.WriteLine("");
+                Console.WriteLine("================== ORDER HISTORY ==================");            //////////////////// [ RECENTLY ADDED ] this is the Order History official Function mechanism ////////////////////
+
+                if (orderCount == 0)
+                {
+                    Console.WriteLine("No completed transactions yet.");        
+                }
+                else
+                {
+                    for (int i = 0; i < orderCount; i++)
+                    {
+                        Console.WriteLine(orderHistory[i]);
+                    }
+                }
             }
 
             else
             {
-                Console.WriteLine("Invalid menu Choice. try again.");
+                Console.WriteLine("Invalid menu Choice. try again."); 
             }
             
 
