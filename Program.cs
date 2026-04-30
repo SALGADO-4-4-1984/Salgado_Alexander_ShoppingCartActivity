@@ -56,7 +56,7 @@ class Program
         int cartCount = 0;                   
         int totalItems = 0;
         int receiptCounter = 1;
-        string[] orderHistory = new string[10];
+        string[] orderHistory = new string[10]; 
         int orderCount = 0;
 
         Product[] store = new Product[13];          
@@ -640,23 +640,34 @@ class Program
                 }
 
 
-                // =================================================================================== SECTION 10.1 ( ORDER HISTORY RECEIPT ) [ NEW ] =================================================================================== //
+                // =================================================================================== SECTION 10.1 ( ORDER HISTORY RECEIPT ) [ UPDATED ]=================================================================================== //
                 string itemsList = "";
 
-                for (int i = 0; i < cartCount; i++)   //////////////////////// [ RECENTLY UPDATED ] Added more Information and made it clear to read Order History of User per purchase //////////////////////////
+                for (int i = 0; i < cartCount; i++)   
                 {
                     itemsList += $"{cart[i].Name} (x{cartQty[i]})\n";
                 }
 
-                receiptCounter++;
-                orderHistory[orderCount] =
-                     $"Receipt #{receiptCounter - 1:D4}\n" +
-                     $"Date: {DateTime.Now}\n\n" +
-                     $"Items:\n{itemsList}\n" +
-                     $"Total: {finalAmount}\n" +
-                     $"---------------------------";
-                orderCount++;
-                
+                if (orderCount < orderHistory.Length)       //<........................... Prevents crash if orderHistory goes beyond 10
+                {
+                    orderHistory[orderCount] =
+                         $"Receipt #{receiptCounter:D4}\n" +
+                         $"Date: {DateTime.Now}\n\n" +
+                         $"Items:\n{itemsList}\n" +
+                         $"Total: {finalAmount}\n" +
+                         $"---------------------------";
+
+                    orderCount++;
+                    receiptCounter++;
+                }
+                else
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Order history limit reached (maximum 10 transactions). Cannot save new receipt.");
+                    Console.WriteLine("");
+                }
+                cartCount = 0;
+                totalItems = 0;                              //<........................... [ RECENTLY ADDED ] Clears the Cart and Resets the shopping session After Checkout, so the next purchase is a fresh start.
             }
 
             else if (menuChoice == "7")  // ========================================================[ CHOICE 7 SECTION ] [ SEARCH PRODUCT ]======================================================= //
