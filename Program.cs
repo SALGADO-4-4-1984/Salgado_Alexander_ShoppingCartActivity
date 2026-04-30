@@ -99,7 +99,7 @@ class Program
 
             string menuChoice = Console.ReadLine();
 
-            if (menuChoice == "1")                      ///////////////////// [ Recently Added ] CART MENU SYSTEM choice 1 as functionable, Bsically moved tne entire "add item system" Sections 3 - 6 inside Choice = 1 /////////////////////               
+            if (menuChoice == "1")     // =========================================================[ CHOICE 1 SECTION ] [ ADD ITEM ]======================================================= //                                
             {
                 int productId = 0;
                 bool isValidId = false;
@@ -255,13 +255,13 @@ class Program
                 }
             }
 
-            ///////////////////// [ Recently Added ] Added 6 Choices option for user input, as experimental and is functionable /////////////////////
+            
 
-            else if (menuChoice == "2") // =========================================================[ CHOICE 2 SECTION ]======================================================= //
+            else if (menuChoice == "2") // =========================================================[ CHOICE 2 SECTION ] [ VIEW CART ]======================================================= //
             {
 
                 Console.WriteLine("");
-                Console.WriteLine("================== VIEW CART ==================");      ///////////////////// [ Recently Added ] Choice 2 Becomes Fully Functionable as a CART VIEWER /////////////////////
+                Console.WriteLine("================== VIEW CART ==================");      
                 if (cartCount == 0)
                 {
                     Console.WriteLine("Cart is Empty.");
@@ -283,28 +283,139 @@ class Program
 
             }
 
-            else if (menuChoice == "3") // =========================================================[ CHOICE 3 SECTION ]======================================================= //
+            else if (menuChoice == "3") // =========================================================[ CHOICE 3 SECTION ] [ REMOVE ITEM ]======================================================= //
             {
                 Console.WriteLine("");
-                Console.WriteLine("Choice 3 is active!");
-                Console.WriteLine("");
+                Console.WriteLine("================== REMOVE ITEM ==================");
+
+                if (cartCount == 0)                                            ///////////////////// [ Recently Added ] Choice 3 Becomes Fully Functionable as an REMOVE ITEM function /////////////////////
+                {
+                    Console.WriteLine("Cart is Empty, There Isn't anything to remove.");
+                }
+                else
+                {
+                    for (int i = 0; i < cartCount; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {cart[i].Name} (Qty: {cartQty[i]})");
+                    }
+
+                    Console.WriteLine("");
+                    Console.WriteLine("Enter item number to remove: ");
+
+                    int removeIndex;
+                    bool isValidRemove = int.TryParse(Console.ReadLine(), out removeIndex);
+
+                    if (!isValidRemove || removeIndex <= 0 || removeIndex > cartCount)
+                    {
+                        Console.WriteLine("Invalid Choice");
+                    }
+                    else
+                    {
+                        removeIndex--;
+
+                        cart[removeIndex].RemainingStock += cartQty[removeIndex];      //<......................... Item Goes back to the Stock.
+                        
+                        totalItems -= cartQty[removeIndex];                            //<......................... TotalItems Updates after Removal.
+
+                        for (int i = removeIndex; i < cartCount - 1; i++)              //<......................... Item Removal Mechanism. 
+                        {
+                            cart[i] = cart[i + 1];
+                            cartQty[i] = cartQty[i + 1];
+                        }
+
+                        cartCount--;
+
+                        Console.WriteLine("Item Removed"); 
+                    }
+
+                }
+
+                
+
+
             }
 
-            else if (menuChoice == "4") // =========================================================[ CHOICE 4 SECTION ]======================================================= //
+            else if (menuChoice == "4") // =========================================================[ CHOICE 4 SECTION ] [ UPDATE QUANTITY ]======================================================= //
             {
                 Console.WriteLine("");
-                Console.WriteLine("Choice 4 working!");
-                Console.WriteLine("");
+                Console.WriteLine("================== UPDATE QUANTITY ==================");
+
+                if (cartCount == 0)                                            ///////////////////// [ Recently Added ] Choice 4 Becomes Fully Functionable as for Updating Quantity /////////////////////
+                {
+                    Console.WriteLine("Cart is Empty");
+                }
+                else
+                {
+                    for (int i = 0; i < cartCount; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {cart[i].Name} (Qty: {cartQty[i]})");
+                    }
+                    Console.WriteLine("");
+
+                    Console.WriteLine("Enter item number to Update: ");
+                    string input = Console.ReadLine();
+
+                    int index;
+                    bool isValid = int.TryParse(input, out index);
+
+                    if (!isValid || index <= 0 || index > cartCount)
+                    {
+                        Console.WriteLine("Invalid Choice");
+                    }
+                    else
+                    {
+                        index--;
+
+                        Console.WriteLine($"you selected: {cart[index].Name}");
+
+                        Console.WriteLine("Enter new quantity: ");
+                        string qtyInput = Console.ReadLine();
+
+                        int newQty;
+                        bool isValidQty = int.TryParse((qtyInput), out newQty);
+
+                        if (!isValidQty || newQty <= 0)
+                        {
+                            Console.WriteLine("Invalid Quantity");
+                        }
+                        else
+                        {
+                            cartQty[index] = newQty;
+                            Console.WriteLine("Quantity Updated Successfully...");
+                        }
+
+                    }
+
+                }
             }
 
-            else if (menuChoice == "5") // =========================================================[ CHOICE 5 SECTION ]======================================================= //
+            else if (menuChoice == "5") // =========================================================[ CHOICE 5 SECTION ] [ CLEAR CART ]======================================================= //
             {
                 Console.WriteLine("");
-                Console.WriteLine("Choice 5 functionable!");
-                Console.WriteLine("");
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("================== REMOVE ITEM ==================");
+
+                    if (cartCount == 0)                                            ///////////////////// [ Recently Added ] Choice 5 Becomes Fully Functionable as an CLEAR CART function /////////////////////                                              
+                    {
+                        Console.WriteLine("Cart is already empty...");
+                    }
+                    else
+                    {
+                        for (int i = 0; i < cartCount; i++)               
+                        {
+                            cart[i].RemainingStock += cartQty[i];                       //<......................... All Items returned to Stock all at ONCE.
+                        }
+
+                        cartCount = 0;
+                        totalItems = 0;                                                 //<......................... all Items Removal.
+
+                        Console.WriteLine("Cart Cleared...");
+                    }
+                }
             }
 
-            else if (menuChoice == "6")  // ========================================================[ CHOICE 6 SECTION ]======================================================= //
+            else if (menuChoice == "6")  // ========================================================[ CHOICE 6 SECTION ] [ CHECKOUT ]======================================================= //
             {
 
                 
@@ -398,7 +509,7 @@ class Program
 
             else
             {
-                continue;
+                Console.WriteLine("Invalid menu Choice. try again.");
             }
             
 
