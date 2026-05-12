@@ -1,14 +1,56 @@
-﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS ) =================================================================================== //
+﻿// =================================================================================== SECTION 1: ( PRODUCT CLASS ) [ UPDATED ] =================================================================================== //
 using System;
 using System.Xml;
 
 class Product
 {
-    public int Id;
-    public string Name;
-    public double Price;
-    public int RemainingStock;
-    public string Category;    
+    private int id;                                 
+    private string name; 
+    private double price;
+    private int remainingStock;
+    private string category;
+
+    public int Id                            //<........................... [ RECENTLY ADDED ] (Property used to access and change the product ID safely)
+    {
+        get { return id; }
+        set { id = value; }
+    }
+
+    public string Name                  //<........................... [ RECENTLY ADDED ] (Property used to safely access and modify product name)
+    {
+        get { return name; }
+        set { name = value; }
+    }
+
+    public double Price                //<........................... [ RECENTLY ADDED ] (Property used to control product price with validation)
+    {
+        get { return price; }
+        set
+        {
+            if (value >= 0)
+            {
+                price = value;
+            }
+        }
+    }
+
+    public int RemainingStock               //<........................... [ RECENTLY ADDED ] (Property used to control stock with validation)
+    {
+        get { return remainingStock; }
+        set
+        {
+            if (value >= 0)
+            {
+                remainingStock = value;
+            }
+        }
+    }
+
+    public string Category           //<........................... [ RECENTLY ADDED ] (Property used to store and access product category)
+    {
+        get { return category; }
+        set { category = value; }
+    }
     public void DisplayProduct()
     {
         Console.WriteLine(
@@ -38,6 +80,11 @@ class Product
     public void DeductStock(int quantity)
     {
         RemainingStock -= quantity; //<......// Stock Reduces after Purchase. 
+    }
+
+    class GamingProduct : Product              //<........................... [ RECENTLY ADDED ] (Child class that inherits Product properties)
+    {
+        public string Brand { get; set; }
     }
 
 }
@@ -640,7 +687,7 @@ class Program
                 }
 
 
-                // =================================================================================== SECTION 10.1 ( ORDER HISTORY RECEIPT ) [ UPDATED ]=================================================================================== //
+                // =================================================================================== SECTION 10.1 ( ORDER HISTORY RECEIPT ) =================================================================================== //
                 string itemsList = "";
 
                 for (int i = 0; i < cartCount; i++)   
@@ -667,7 +714,7 @@ class Program
                     Console.WriteLine("");
                 }
                 cartCount = 0;
-                totalItems = 0;                              //<........................... [ RECENTLY ADDED ] Clears the Cart and Resets the shopping session After Checkout, so the next purchase is a fresh start.
+                totalItems = 0;                              
             }
 
             else if (menuChoice == "7")  // ========================================================[ CHOICE 7 SECTION ] [ SEARCH PRODUCT ]======================================================= //
